@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"notes-app-go/config"
 )
 
 var (
@@ -12,11 +13,10 @@ var (
 
 func InitDB() *gorm.DB {
 	var err error
-	dsn := "notes-app-api:12345678$Api@tcp(127.0.0.1:3306)/db-notes-app"
+	dsn := config.GetEnv("DB_USERNAME") + ":" + config.GetEnv("DB_PASSWORD") + "@tcp(" + config.GetEnv("DB_HOSTNAME") + ":3306)/" + config.GetEnv("DB_DATABASE")
 	DBCon, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
 	if err != nil {
-		//panic("failed to connect database")
+		//	//panic("failed to connect database")
 		fmt.Println("Error connecting to database : error=%v", err)
 		return nil
 	}
