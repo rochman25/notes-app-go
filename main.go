@@ -28,22 +28,23 @@ func main() {
 	}
 
 	router := gin.New()
+	router.HandleMethodNotAllowed = true
 
-	router.GET("/", func(c *gin.Context) {
+	router.GET("/test", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "success",
 			"message": "Greeting from Go World.",
 		})
 	})
 
-	router.NoRoute(func(c *gin.Context) {
-		response := utils.ErrorResponse("failed", "404 Route Not Found", []string{})
+	router.NoMethod(func(c *gin.Context) {
+		response := utils.MethodNotAllowed
 		c.JSON(http.StatusMethodNotAllowed, response)
 	})
 
-	router.NoMethod(func(c *gin.Context) {
-		response := utils.ErrorResponse("failed", "405 Method Not Allowed", []string{})
-		c.JSON(http.StatusMethodNotAllowed, response)
+	router.NoRoute(func(c *gin.Context) {
+		response := utils.NotFoundError
+		c.JSON(http.StatusNotFound, response)
 	})
 
 	err := router.Run(":" + config.GetEnv("APP_PORT"))

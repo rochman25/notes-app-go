@@ -13,3 +13,8 @@ func ErrorResponse(status string, message string, error []string) *Response {
 		error,
 	}
 }
+
+var (
+	NotFoundError    = ErrorResponse("failed", "404 Route Not Found", []string{})
+	MethodNotAllowed = ErrorResponse("failed", "405 Method Not Allowed", []string{})
+)
