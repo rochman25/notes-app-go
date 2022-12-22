@@ -43,6 +43,8 @@ func main() {
 		} else {
 			c.JSON(http.StatusOK, utils.SuccessResponse("", "", users))
 		}
+		db, _ := database.DBCon.DB()
+		defer db.Close()
 	})
 
 	router.NoMethod(func(c *gin.Context) {
