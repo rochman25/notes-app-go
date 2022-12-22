@@ -12,6 +12,7 @@ var tables = []interface{}{
 	&models.Notes{},
 	&models.Users{},
 	&models.Authentications{},
+	&models.Collaborations{},
 }
 
 func Migrate() {
