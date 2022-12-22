@@ -2,11 +2,13 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"notes-app-go/config"
 	"notes-app-go/database"
 	"notes-app-go/database/migrations"
+	"notes-app-go/src/models"
 	"notes-app-go/src/utils"
 )
 
@@ -27,14 +29,20 @@ func main() {
 		migrations.Status()
 	}
 
-	router := gin.New()
+	router := gin.Default()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 	router.HandleMethodNotAllowed = true
 
-	router.GET("/test", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status":  "success",
-			"message": "Greeting from Go World.",
-		})
+	router.GET("/users", func(c *gin.Context) {
+		var users []models.Users
+		database.InitDB()
+		if err := database.DBCon.Find(&users).Error; err != nil {
+			c.AbortWithStatus(404)
+			fmt.Println(err)
+		} else {
+			c.JSON(http.StatusOK, utils.SuccessResponse("", "", users))
+		}
 	})
 
 	router.NoMethod(func(c *gin.Context) {
